@@ -1,0 +1,312 @@
+/* ============ 序章 · 梦 ============ */
+.tut-kicker {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: rgba(138, 139, 144, 0.85);
+}
+
+.tut-skip {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 500;
+  border: 1px solid rgba(138, 139, 144, 0.36);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--dark);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+}
+
+.tut-skip:hover {
+  border-color: var(--gold);
+  color: #a9852b;
+  background: #fff;
+}
+
+.tut-objective {
+  position: absolute;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%);
+  padding: 9px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(232, 184, 75, 0.5);
+  background: rgba(255, 251, 240, 0.94);
+  color: #8a6a1f;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  box-shadow: 0 8px 22px rgba(138, 139, 144, 0.14);
+  z-index: 30;
+  pointer-events: none;
+  white-space: nowrap;
+  animation: tut-hint-in 0.32s ease both;
+}
+
+@keyframes tut-hint-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+}
+
+.tut-core-label {
+  position: absolute;
+  left: 50%;
+  top: 108px;
+  transform: translateX(-50%);
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(232, 184, 75, 0.55);
+  color: #8a6a1f;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+  animation: tut-hint-in 0.32s ease both;
+}
+
+/* ============ 幻影 ============ */
+.phantom {
+  position: relative;
+  width: 110px;
+  height: 150px;
+  border-radius: 12px;
+  border: 2px solid var(--phantom-color, #8a8b90);
+  background:
+    linear-gradient(172deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.9) 72%),
+    var(--phantom-color, #8a8b90);
+  box-shadow: 0 8px 20px rgba(138, 139, 144, 0.24);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  animation: phantom-in 0.4s ease both;
+}
+
+@keyframes phantom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+.phantom__realm {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  display: flex;
+  padding: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.phantom__glyph {
+  display: flex;
+  opacity: 0.26;
+  transform: translateY(-4px);
+}
+
+.phantom__name {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: rgba(63, 65, 71, 0.78);
+}
+
+.phantom__power {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--dark);
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.9);
+}
+
+.tut-hand-static {
+  cursor: default;
+}
+
+/* ============ 对话 ============ */
+.tut-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 250;
+  background: radial-gradient(
+    120% 90% at 50% 60%,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.82) 100%
+  );
+  backdrop-filter: blur(1.5px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 22px;
+  cursor: pointer;
+  animation: tut-veil-in 0.24s ease both;
+}
+
+@keyframes tut-veil-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.tut-dialogue {
+  width: 780px;
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  animation: tut-dialogue-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.tut-dialogue.is-narration {
+  width: 640px;
+  justify-content: center;
+}
+
+@keyframes tut-dialogue-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+.tut-portrait {
+  flex: 0 0 auto;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #fff;
+  box-shadow: 0 8px 20px rgba(138, 139, 144, 0.28);
+  background: #fff;
+}
+
+.tut-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.tut-bubble {
+  position: relative;
+  flex: 1;
+  min-height: 96px;
+  padding: 14px 22px 22px;
+  border-radius: 22px;
+  border: 1.6px solid rgba(204, 207, 225, 0.9);
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 14px 34px rgba(138, 139, 144, 0.2);
+}
+
+.tut-dialogue.is-narration .tut-bubble {
+  flex: 0 1 auto;
+  padding: 16px 30px 22px;
+  text-align: center;
+  border-style: dashed;
+}
+
+.tut-speaker {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--character-color, #8a8b90);
+}
+
+.tut-text {
+  margin: 6px 0 0;
+  font-size: 15px;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+  color: #3f4147;
+}
+
+.is-narration .tut-text {
+  font-style: italic;
+  color: rgba(63, 65, 71, 0.76);
+}
+
+.tut-next {
+  position: absolute;
+  right: 18px;
+  bottom: 8px;
+  font-size: 10px;
+  font-style: normal;
+  letter-spacing: 0.1em;
+  color: rgba(138, 139, 144, 0.6);
+  animation: tut-next-blink 1.6s ease-in-out infinite;
+}
+
+@keyframes tut-next-blink {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* ============ 结束 ============ */
+.tut-end {
+  position: absolute;
+  inset: 0;
+  z-index: 400;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(5px);
+  animation: tut-veil-in 0.6s ease both;
+}
+
+.tut-end-card {
+  width: 430px;
+  padding: 40px 36px 32px;
+  border-radius: 28px;
+  border: 1.6px solid rgba(204, 207, 225, 0.9);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 26px 60px rgba(138, 139, 144, 0.24);
+  text-align: center;
+}
+
+.tut-end-kicker {
+  margin: 0;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: rgba(138, 139, 144, 0.75);
+}
+
+.tut-end-card h2 {
+  margin: 12px 0 0;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--dark);
+}
+
+.tut-end-text {
+  margin: 14px 0 0;
+  font-size: 13px;
+  line-height: 2;
+  color: rgba(63, 65, 71, 0.72);
+}
+
+.tut-end-reward {
+  margin: 20px 0 24px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: rgba(138, 139, 144, 0.9);
+}
+
+.tut-end-reward b {
+  color: var(--gold);
+  font-size: 18px;
+  margin-left: 4px;
+}

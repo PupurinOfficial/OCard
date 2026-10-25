@@ -1,0 +1,211 @@
+.awaken {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 3.4vh, 38px);
+  padding: clamp(40px, 7vh, 80px) 24px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.awaken::before {
+  content: '⊙';
+  position: absolute;
+  left: -8%;
+  bottom: -30%;
+  font-size: min(78vw, 900px);
+  line-height: 1;
+  color: rgba(138, 139, 144, 0.05);
+  pointer-events: none;
+}
+
+.awaken::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(760px 520px at 50% -8%, rgba(204, 207, 225, 0.45), transparent 66%),
+    radial-gradient(ellipse at center, transparent 52%, rgba(90, 92, 99, 0.13) 100%);
+}
+
+.awaken-head {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.awaken-kicker {
+  margin: 0 0 10px;
+  font-size: 11px;
+  letter-spacing: 0.5em;
+  text-indent: 0.5em;
+  opacity: 0.45;
+}
+
+.awaken-title {
+  margin: 0;
+  font-size: clamp(36px, 5.4vw, 62px);
+  letter-spacing: 0.24em;
+  text-indent: 0.24em;
+  font-weight: 700;
+  color: #34363c;
+}
+
+.awaken-sub {
+  margin: 12px auto 0;
+  max-width: 42ch;
+  font-size: 12.5px;
+  line-height: 2;
+  opacity: 0.6;
+}
+
+.awaken-choices {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: clamp(18px, 4vw, 56px);
+  align-items: stretch;
+}
+
+.awaken-choice {
+  position: relative;
+  width: clamp(216px, 24vw, 300px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 12px 18px;
+  border-radius: 26px;
+  border: 1.5px solid rgba(138, 139, 144, 0.2);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
+  color: var(--dark);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.24s ease,
+    box-shadow 0.24s ease;
+}
+
+.awaken-choice:hover {
+  transform: translateY(-7px);
+  border-color: rgba(232, 184, 75, 0.62);
+  box-shadow: 0 28px 62px rgba(90, 92, 99, 0.18);
+}
+
+.awaken-choice.is-picked {
+  border-color: var(--gold);
+  box-shadow:
+    0 0 0 3px rgba(232, 184, 75, 0.16),
+    0 28px 62px rgba(232, 184, 75, 0.24);
+  transform: translateY(-7px);
+}
+
+.awaken-frame {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 18px;
+  overflow: hidden;
+  background: linear-gradient(150deg, #f4f5fb, #e2e4ef);
+  transition: box-shadow 0.24s ease;
+}
+
+.awaken-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  -webkit-user-drag: none;
+}
+
+.awaken-choice:hover .awaken-frame img {
+  transform: scale(1.04);
+}
+
+.awaken-choice.is-picked .awaken-frame {
+  box-shadow: inset 0 0 0 2px rgba(232, 184, 75, 0.55);
+}
+
+.awaken-name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.awaken-name-row svg {
+  align-self: center;
+  opacity: 0.8;
+  color: var(--realm-color);
+}
+
+.awaken-name-row strong {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: #3f4147;
+}
+
+.awaken-title-small {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  opacity: 0.5;
+}
+
+.awaken-lore {
+  padding: 0 4px;
+  font-size: 12px;
+  line-height: 1.9;
+  opacity: 0.62;
+}
+
+.awaken-count {
+  padding: 0 4px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  opacity: 0.42;
+}
+
+.awaken-picked {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: #fff;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  box-shadow: 0 6px 16px rgba(232, 184, 75, 0.4);
+}
+
+.awaken-foot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.awaken-hint {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  opacity: 0.45;
+}
+
+@media (max-width: 720px) {
+  .awaken-choice {
+    width: min(46vw, 240px);
+  }
+
+  .awaken-lore {
+    display: none;
+  }
+}

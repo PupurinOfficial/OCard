@@ -1,0 +1,112 @@
+.deck-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 8px;
+  border-radius: 18px;
+  border: 1.5px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.deck-card:hover {
+  background: rgba(255, 255, 255, 0.78);
+  transform: translateY(-3px);
+}
+
+.deck-card.is-selected {
+  border-color: rgba(232, 184, 75, 0.8);
+  background: rgba(232, 184, 75, 0.09);
+  box-shadow: 0 10px 26px rgba(232, 184, 75, 0.16);
+}
+
+.deck-card.is-locked {
+  opacity: 0.32;
+  filter: grayscale(1);
+  cursor: not-allowed;
+}
+
+.deck-card-order {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 12px rgba(232, 184, 75, 0.45);
+}
+
+.deck-card-caption {
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+}
+
+.deck-bar {
+  position: sticky;
+  bottom: 14px;
+  z-index: 20;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 20px;
+  border-radius: 18px;
+  border: 1px solid rgba(138, 139, 144, 0.2);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 16px 40px rgba(90, 92, 99, 0.14);
+}
+
+.deck-bar-info {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.deck-bar-count {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+}
+
+.deck-bar-count b {
+  font-size: 22px;
+  font-weight: 700;
+  color: #34363c;
+}
+
+.deck-bar-hint {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  opacity: 0.55;
+}
+
+.deck-bar-actions {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 640px) {
+  .deck-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .deck-bar-actions {
+    justify-content: flex-end;
+  }
+}
