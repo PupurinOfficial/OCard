@@ -22,7 +22,8 @@ export interface CardDef {
   rarity: Rarity;
   effect?: CardEffect;
   lore: string;
-  art: string;
+  /** 卡面插画；尚未绘制卡面的角色可省略，由 UI 渲染占位卡面 */
+  art?: string;
 }
 
 export interface ReliveState {

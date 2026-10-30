@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CHARACTERS, getCharacter } from '../data/cards';
+import { getCharacter, getOpponent } from '../data/cards';
 import { loadSave, writeSave } from '../data/save';
 import { effectiveDifficulty, levelFromWins } from '../game/progress';
 import { ProgressDialog } from '../components/ProgressDialog';
@@ -13,7 +13,7 @@ export function HomePage() {
   const [dialog, setDialog] = useState<ProgressKind | null>(null);
 
   const selected = getCharacter(save.selectedCharacter);
-  const opponent = CHARACTERS.find((item) => item.id !== selected.id) ?? CHARACTERS[0];
+  const opponent = getOpponent(selected.id);
   const level = levelFromWins(save.wins);
   const difficulty = effectiveDifficulty(level, save.difficultyReduced);
 

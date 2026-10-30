@@ -2,7 +2,7 @@ import { useEffect, useReducer, useRef, useState } from 'react';
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { CHARACTERS, REALM_COLORS, getCardDef, getCharacter } from '../data/cards';
+import { REALM_COLORS, getCardDef, getCharacter, getOpponent } from '../data/cards';
 import { loadSave, writeSave } from '../data/save';
 import { CardView } from '../components/CardView';
 import { ActionDots } from '../components/ActionDots';
@@ -112,7 +112,7 @@ export function BattlePage() {
   const navigate = useNavigate();
   const [settings] = useState(loadSave);
   const playerCharacter = getCharacter(settings.selectedCharacter);
-  const enemyCharacter = CHARACTERS.find((item) => item.id !== playerCharacter.id) ?? CHARACTERS[0];
+  const enemyCharacter = getOpponent(playerCharacter.id);
 
   const [playerDeck] = useState(() => {
     const owned = new Set(settings.owned);

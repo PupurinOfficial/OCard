@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CHARACTERS, cardsOfCharacter, getCharacter } from '../data/cards';
+import { CHARACTERS, cardsOfCharacter, getCharacter, getOpponent } from '../data/cards';
 import { loadSave, writeSave } from '../data/save';
 import { MAX_DECK, MIN_DECK, isValidDeck } from '../game/deck';
 import { CardView } from '../components/CardView';
@@ -12,7 +12,7 @@ export function DeckPage() {
   const [selected, setSelected] = useState<string[]>(save.deck);
 
   const character = getCharacter(save.selectedCharacter);
-  const opponent = CHARACTERS.find((item) => item.id !== character.id) ?? CHARACTERS[0];
+  const opponent = getOpponent(character.id);
   const owned = new Set(save.owned);
   const remaining = MIN_DECK - selected.length;
 
@@ -75,7 +75,9 @@ export function DeckPage() {
                       card={{ uid: def.id, defId: def.id, power: def.power, maxPower: def.power }}
                       variant="grid"
                     />
-                    <span className="deck-card-caption">{isOwned ? def.name : '未拥有'}</span>
+                    <span className="deck-card-caption" title={def.name}>
+                      {isOwned ? def.name : '未拥有'}
+                    </span>
                   </button>
                 );
               })}

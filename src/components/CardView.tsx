@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
-import { effectText, getCardDef } from '../data/cards';
+import { REALM_COLORS, effectText, getCardDef } from '../data/cards';
 import type { CardInstance } from '../game/types';
 import { RealmIcon } from './RealmIcon';
 import { TypeIcon } from './TypeIcon';
@@ -83,7 +84,18 @@ export function CardView({ card, variant = 'field' }: { card: CardInstance; vari
         }}
         onPointerLeave={() => setHovered(false)}
       >
-        <img className="card__art" src={def.art} alt="" draggable={false} />
+        {def.art ? (
+          <img className="card__art" src={def.art} alt="" draggable={false} />
+        ) : (
+          <div
+            className="card__fallback"
+            style={{ '--fallback-color': REALM_COLORS[def.realm] } as CSSProperties}
+            aria-hidden="true"
+          >
+            <span className="card__fallback-glyph">⊙</span>
+            <span className="card__fallback-name">{def.name}</span>
+          </div>
+        )}
         <div className="card__scrim" aria-hidden="true" />
         <div className="card__realm">
           <RealmIcon realm={def.realm} size={22} />

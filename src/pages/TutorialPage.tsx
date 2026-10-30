@@ -423,7 +423,7 @@ export function TutorialPage() {
         })}
 
         {/* 手牌 */}
-        <div className="hand">
+        <div className="hand tut-hand">
           {hand.map((card, index) => {
             const draggable = canPlayCard && card.defId === script.attackCardId;
             return (

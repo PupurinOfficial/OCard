@@ -567,8 +567,16 @@
 }
 
 .rite-gain-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 110px;
   font-size: 12px;
+  line-height: 1.5;
   letter-spacing: 0.08em;
+  text-align: center;
+  overflow-wrap: anywhere;
   color: var(--ink);
 }
 

@@ -34,9 +34,9 @@ export function CollectionPage() {
                   card={{ uid: def.id, defId: def.id, power: def.power, maxPower: def.power }}
                   variant="grid"
                 />
-                <div className="card-grid-caption">
-                  {def.name}
-                  <span>{def.rarity}</span>
+                <div className="card-grid-caption" title={def.name}>
+                  <span className="card-grid-name">{def.name}</span>
+                  <span className="card-grid-rarity">{def.rarity}</span>
                 </div>
               </div>
             ))}
