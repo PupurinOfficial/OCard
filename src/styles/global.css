@@ -114,11 +114,12 @@ a {
 .title-screen {
   position: relative;
   flex: 1;
-  display: grid;
-  grid-template-columns: minmax(300px, 0.92fr) minmax(330px, 1.08fr);
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: clamp(20px, 5vw, 82px);
-  padding: clamp(40px, 9vh, 96px) clamp(24px, 7vw, 110px) clamp(112px, 16vh, 168px);
+  justify-content: center;
+  gap: clamp(4px, 1.4vh, 14px);
+  padding: clamp(70px, 11vh, 96px) clamp(24px, 6vw, 90px) clamp(102px, 16vh, 132px);
   overflow: hidden;
 }
 
@@ -143,13 +144,79 @@ a {
   gap: 4px;
 }
 
+/* 首页看板：卡牌舞台与伪 3D 旋转 */
+.board-stage {
+  position: relative;
+  margin-bottom: clamp(14px, 3vh, 30px);
+  perspective: 900px;
+}
+
+.board-tilt {
+  transition: transform 0.16s ease-out;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* 看板左侧的竖向圆点切换条 */
+.board-dots {
+  position: absolute;
+  left: clamp(12px, 2.2vw, 34px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 13px;
+}
+
+.board-dots::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 50%;
+  width: 1px;
+  background: rgba(138, 139, 144, 0.24);
+  z-index: -1;
+}
+
+.board-dot {
+  width: 11px;
+  height: 11px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--dot-color) 55%, #fff);
+  background: rgba(255, 255, 255, 0.82);
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.board-dot:hover {
+  transform: scale(1.18);
+}
+
+.board-dot.is-active {
+  background: var(--dot-color);
+  border-color: var(--dot-color);
+  transform: scale(1.35);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--dot-color) 18%, transparent);
+}
+
+.board-dot--mascot.is-active {
+  background: var(--gold);
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px rgba(232, 184, 75, 0.18);
+}
+
 .title-emblem {
   position: relative;
-  width: clamp(230px, 29vw, 380px);
+  width: clamp(200px, 24vw, 330px);
   aspect-ratio: 1;
   display: grid;
   place-items: center;
-  margin-bottom: clamp(14px, 3vh, 30px);
+  margin-bottom: clamp(10px, 2.4vh, 24px);
 }
 
 .title-emblem::before {
@@ -239,110 +306,228 @@ a {
   opacity: 0.5;
 }
 
-.title-panel {
+/* ============ 首页 HUD：等级 / 钱包 ============ */
+.home-level {
+  position: absolute;
+  left: clamp(18px, 3vw, 46px);
+  top: clamp(16px, 3vh, 36px);
+  z-index: 3;
+  width: clamp(70px, 6.4vw, 86px);
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(232, 184, 75, 0.55);
+  background: #fff;
+  box-shadow: 0 16px 34px rgba(232, 184, 75, 0.18), inset 0 0 0 3px rgba(255, 255, 255, 0.9);
+  color: #4a3a12;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
+}
+
+.home-level:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px rgba(232, 184, 75, 0.26), inset 0 0 0 3px rgba(255, 255, 255, 0.9);
+}
+
+.home-level-label {
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  opacity: 0.55;
+}
+
+.home-level b {
+  font-size: clamp(20px, 2vw, 26px);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.home-level-diff {
+  position: absolute;
+  left: 50%;
+  bottom: -19px;
+  transform: translateX(-50%);
+  padding: 1px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(232, 184, 75, 0.35);
+  background: rgba(255, 255, 255, 0.86);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  color: #96721d;
+}
+
+.home-wallet {
+  position: absolute;
+  right: clamp(18px, 3vw, 46px);
+  top: clamp(16px, 3vh, 36px);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+/* ============ 首页中央：看板 ============ */
+.home-logo {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+  color: #34363c;
+  text-shadow: 0 14px 32px rgba(90, 92, 99, 0.14);
+}
+
+.home-center {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
+}
+
+.home-lore {
+  margin: 10px 0 0;
+  max-width: 36ch;
+  font-size: 12px;
+  line-height: 1.9;
+  letter-spacing: 0.04em;
+  text-align: center;
+  opacity: 0.55;
+}
+
+/* ============ 首页入口：大图标 + 文字 ============ */
+.home-dock {
+  position: absolute;
+  left: clamp(18px, 4vw, 64px);
+  bottom: clamp(20px, 5vh, 52px);
+  z-index: 3;
+  display: flex;
+  gap: clamp(10px, 1.6vw, 24px);
   align-items: flex-start;
 }
 
-.title-kicker {
-  margin: 0 0 14px;
-  font-size: 11px;
-  letter-spacing: 0.42em;
-  text-indent: 0.42em;
-  opacity: 0.5;
-}
-
-.title-logo {
-  margin: 0;
-  font-size: clamp(58px, 8vw, 112px);
-  line-height: 0.98;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: #34363c;
-  text-shadow: 0 18px 40px rgba(90, 92, 99, 0.16);
-}
-
-.title-lore {
-  margin: clamp(16px, 3vh, 30px) 0 0;
-  max-width: 30ch;
-  font-size: 13px;
-  line-height: 2;
-  opacity: 0.62;
-}
-
-.title-menu {
+/* 入口：一个大图标 + 下方文字，整体无边框，靠圆形图标盘撑出体量 */
+.dock-button {
+  width: clamp(92px, 8.6vw, 112px);
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: clamp(26px, 4.5vh, 46px);
-}
-
-.menu-button {
-  width: min(320px, 72vw);
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 15px 22px;
-  border-radius: 14px;
-  border: 1.4px solid rgba(138, 139, 144, 0.3);
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(6px);
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
   color: var(--ink);
-  font-size: 14px;
-  letter-spacing: 0.14em;
   cursor: pointer;
-  transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.menu-button i {
-  font-style: normal;
-  font-size: 15px;
-  opacity: 0.35;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+.dock-button:hover {
+  transform: translateY(-6px);
 }
 
-.menu-button:hover {
-  border-color: var(--dark);
-  transform: translateX(6px);
+.dock-icon {
+  position: relative;
+  width: clamp(62px, 5.6vw, 74px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(138, 139, 144, 0.24);
+  background: #fff;
+  box-shadow: 0 14px 30px rgba(90, 92, 99, 0.12), inset 0 0 0 3px rgba(255, 255, 255, 0.9);
+  color: #70737b;
+  transition: color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.menu-button:hover i {
-  opacity: 1;
-  transform: translateX(4px);
+/* 只作用于图标本身，水线用 FlowingBorder 的 .flow-border，需保持铺满父级 */
+.dock-icon > svg:not(.flow-border) {
+  width: 56%;
+  height: 56%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.menu-button--primary {
-  background: var(--dark);
-  border-color: var(--dark);
-  color: #fff;
-  box-shadow: 0 14px 30px rgba(90, 92, 99, 0.22);
+/* 悬停不再改描边，改由 FlowingBorder 沿图标圆盘流动水线 */
+.dock-button:hover .dock-icon {
+  color: var(--gold);
+  box-shadow: 0 18px 38px rgba(232, 184, 75, 0.22), inset 0 0 0 3px rgba(255, 255, 255, 0.9);
 }
 
-.menu-button--primary:hover {
-  background: var(--ink);
-  border-color: var(--ink);
+.dock-label {
+  font-size: 10.5px;
+  line-height: 1.45;
+  letter-spacing: 0.1em;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--ink);
 }
 
-.menu-button--primary i {
-  opacity: 0.7;
-}
-
-.title-footnote {
-  margin: clamp(20px, 3vh, 32px) 0 0;
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  opacity: 0.4;
-}
-
-.title-status {
+/* 右下角：进入对战 */
+.home-battle {
+  position: absolute;
+  right: clamp(18px, 4vw, 64px);
+  bottom: clamp(20px, 5vh, 52px);
+  z-index: 3;
+  width: clamp(132px, 12.4vw, 172px);
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: clamp(22px, 3.6vh, 34px);
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 12px 14px;
+  border-radius: 26px;
+  border: 1.5px solid rgba(232, 184, 75, 0.72);
+  background: #fff;
+  box-shadow: 0 22px 48px rgba(232, 184, 75, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease;
+}
+
+.home-battle:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 28px 58px rgba(232, 184, 75, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+}
+
+/* 只保留外面的方形：去掉图标圆盘，图标直接落在面板上 */
+.home-battle .dock-icon {
+  width: auto;
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--gold);
+}
+
+.home-battle .dock-icon > svg:not(.flow-border) {
+  width: clamp(40px, 3.6vw, 48px);
+  height: clamp(40px, 3.6vw, 48px);
+}
+
+.home-battle .dock-label {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+  color: #4a3a12;
+}
+
+.home-battle-note {
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  opacity: 0.5;
+  color: #7a6320;
 }
 
 .status-chip {
@@ -392,6 +577,11 @@ a {
 .status-chip.is-static:hover {
   border-color: rgba(232, 184, 75, 0.4);
   color: var(--dark);
+}
+
+.status-chip--overflow {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(232, 184, 75, 0.58);
 }
 
 /* ============ 通用按钮 ============ */
@@ -574,29 +764,167 @@ a {
   line-height: 1.7;
 }
 
+/* 图鉴中的光辉与看板设置 */
+.card-grid-glory {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  opacity: 0.65;
+}
+
+.card-grid-glory-pips {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.card-grid-glory-pips i {
+  width: 6px;
+  height: 6px;
+  border-radius: 1.5px;
+  transform: rotate(45deg);
+  border: 1px solid rgba(176, 138, 46, 0.5);
+  background: transparent;
+}
+
+.card-grid-glory-pips i.is-on {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+.board-toggle {
+  margin-top: -2px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(138, 139, 144, 0.32);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--ink);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: border-color 0.16s ease, color 0.16s ease, background 0.16s ease;
+}
+
+.board-toggle:hover:not(:disabled) {
+  border-color: var(--dark);
+}
+
+.board-toggle.is-on {
+  border-color: var(--gold);
+  background: rgba(232, 184, 75, 0.12);
+  color: #8a6a1e;
+}
+
+.board-toggle:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
 @media (max-width: 900px) {
   .title-screen {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    text-align: center;
-    gap: 12px;
-    padding: 72px 20px 132px;
+    padding: 92px 20px 148px;
   }
 
   .title-emblem {
-    width: min(56vw, 250px);
+    width: min(52vw, 230px);
     margin-bottom: 10px;
   }
 
-  .title-panel {
-    align-items: center;
+  .board-dots {
+    left: 8px;
+    gap: 10px;
   }
 
-  .title-lore {
-    max-width: 34ch;
+  .board-dot {
+    width: 9px;
+    height: 9px;
   }
 
-  .title-menu {
-    align-items: center;
+  .home-level {
+    width: 62px;
+  }
+
+  .home-lore {
+    display: none;
+  }
+
+  .home-dock {
+    left: 12px;
+    bottom: 16px;
+    gap: 8px;
+  }
+
+  .dock-button {
+    width: 82px;
+    gap: 8px;
+  }
+
+  .dock-icon {
+    width: 54px;
+  }
+
+  .dock-label {
+    font-size: 9.5px;
+    letter-spacing: 0.04em;
+  }
+
+  .home-battle {
+    right: 12px;
+    bottom: 16px;
+    width: 112px;
+    padding: 13px 8px 11px;
+  }
+
+  .home-battle .dock-icon {
+    width: auto;
+  }
+
+  .home-battle .dock-label {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+}
+
+@media (max-width: 560px) {
+  .home-dock {
+    gap: 6px;
+  }
+
+  .dock-button {
+    width: 66px;
+    gap: 6px;
+  }
+
+  .dock-icon {
+    width: 46px;
+  }
+
+  .dock-label {
+    font-size: 8.5px;
+    letter-spacing: 0.02em;
+  }
+
+  .home-battle {
+    width: 96px;
+    padding: 11px 6px 9px;
+  }
+
+  .home-battle .dock-icon {
+    width: auto;
+  }
+
+  .home-battle .dock-icon > svg:not(.flow-border) {
+    width: 36px;
+    height: 36px;
+  }
+
+  .home-battle .dock-label {
+    font-size: 10px;
+    letter-spacing: 0.02em;
+  }
+
+  .home-battle-note {
+    font-size: 8px;
   }
 }

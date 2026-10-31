@@ -6,6 +6,7 @@ import { BattlePage } from './pages/BattlePage';
 import { GachaPage } from './pages/GachaPage';
 import { CollectionPage } from './pages/CollectionPage';
 import { DeckPage } from './pages/DeckPage';
+import { ShopPage } from './pages/ShopPage';
 import { AwakenPage } from './pages/AwakenPage';
 import { TutorialPage } from './pages/TutorialPage';
 
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="/gacha" element={<GachaPage />} />
           <Route path="/collection" element={<CollectionPage />} />
           <Route path="/deck" element={<DeckPage />} />
+          <Route path="/shop" element={<ShopPage />} />
         </Route>
         <Route path="/battle" element={<BattlePage />} />
       </Route>

@@ -1,0 +1,52 @@
+/* ============ 沿边缘流动的水线 ============ */
+.flow-border {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 2;
+  animation: flow-border-in 0.32s ease both;
+}
+
+@keyframes flow-border-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.flow-border rect {
+  fill: none;
+  stroke: var(--flow-color, var(--gold));
+  stroke-linecap: round;
+  animation-name: flow-border-run;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  filter: drop-shadow(0 0 4px var(--flow-color, rgba(232, 184, 75, 0.6)));
+}
+
+.flow-border rect.is-reverse {
+  animation-name: flow-border-run-reverse;
+}
+
+@keyframes flow-border-run {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes flow-border-run-reverse {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 100;
+  }
+}

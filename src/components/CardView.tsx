@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
-import { REALM_COLORS, effectText, getCardDef } from '../data/cards';
+import { REALM_COLORS, effectText, getCardDef, getCharacter } from '../data/cards';
 import type { CardInstance } from '../game/types';
 import { RealmIcon } from './RealmIcon';
 import { TypeIcon } from './TypeIcon';
@@ -21,10 +21,13 @@ interface InfoPos {
   below: boolean;
 }
 
-export type CardVariant = 'field' | 'hand' | 'grid';
+export type CardVariant = 'field' | 'hand' | 'grid' | 'board' | 'guard';
 
 export function CardView({ card, variant = 'field' }: { card: CardInstance; variant?: CardVariant }) {
   const def = getCardDef(card.defId);
+  const glory = card.glory ?? 0;
+  const supportColor = getCharacter(def.character).color;
+  const iconSize = variant === 'board' ? 34 : 22;
   const cardRef = useRef<HTMLDivElement>(null);
   const posRef = useRef<InfoPos | null>(null);
   const [hovered, setHovered] = useState(false);
@@ -69,15 +72,20 @@ export function CardView({ card, variant = 'field' }: { card: CardInstance; vari
   const classes = ['card', `card--${variant}`];
   if (card.power < card.maxPower) classes.push('card--hurt');
   if (card.relive) classes.push('card--relive', RELIVE_CLASS[card.relive.realm]);
+  if (glory >= 2) classes.push(`card--glory-${glory}`);
 
   const effect = effectText(def);
+  const gloryStyle = { '--glory-color': supportColor } as CSSProperties;
 
   return (
     <>
       <div
         ref={cardRef}
         className={classes.join(' ')}
-        aria-label={`${def.name}，${def.type}，生力 ${card.power}`}
+        style={glory >= 2 ? gloryStyle : undefined}
+        aria-label={`${def.name}，${def.type}，生力 ${card.power}${
+          glory > 0 ? `，光辉 ${glory}` : ''
+        }`}
         onPointerEnter={() => {
           if (window.matchMedia('(hover: none)').matches) return;
           setHovered(true);
@@ -97,12 +105,21 @@ export function CardView({ card, variant = 'field' }: { card: CardInstance; vari
           </div>
         )}
         <div className="card__scrim" aria-hidden="true" />
+        {glory >= 3
+          ? [0, 1, 2, 3].map((index) => (
+              <span
+                key={index}
+                className={`card__shard card__shard--${index + 1}`}
+                aria-hidden="true"
+              />
+            ))
+          : null}
         <div className="card__realm">
-          <RealmIcon realm={def.realm} size={22} />
+          <RealmIcon realm={def.realm} size={iconSize} />
         </div>
         <div className="card__power">{card.power}</div>
         <div className="card__type">
-          <TypeIcon type={def.type} size={22} />
+          <TypeIcon type={def.type} size={iconSize} />
         </div>
         {card.relive ? <div className="card__relive">Relive</div> : null}
       </div>
@@ -110,8 +127,14 @@ export function CardView({ card, variant = 'field' }: { card: CardInstance; vari
       {hovered && info
         ? createPortal(
             <div
-              className={`card-info ${info.below ? 'card-info--below' : ''}`}
-              style={{ left: info.left, top: info.top }}
+              className={`card-info ${info.below ? 'card-info--below' : ''} ${
+                glory >= 3 ? 'card-info--glory-3' : ''
+              }`}
+              style={{
+                left: info.left,
+                top: info.top,
+                ...(glory >= 3 ? gloryStyle : {}),
+              }}
             >
               <div className="card-info__head">
                 <strong>{def.name}</strong>
@@ -125,6 +148,20 @@ export function CardView({ card, variant = 'field' }: { card: CardInstance; vari
                 <b>{card.power}</b>
                 {card.power < card.maxPower ? <small>/ {card.maxPower}</small> : null}
               </div>
+              {glory > 0 ? (
+                <div className="card-info__row">
+                  <span className="card-info__label">光辉</span>
+                  <span className="card-info__glory">
+                    <b>
+                      {'◆'.repeat(glory)}
+                      {'◇'.repeat(3 - glory)}
+                    </b>
+                    <em>
+                      {glory} / 3 · 生力 +{glory * 25}%
+                    </em>
+                  </span>
+                </div>
+              ) : null}
               <div className="card-info__row">
                 <span className="card-info__label">使用效果</span>
                 <span className={effect ? 'card-info__effect' : 'card-info__muted'}>

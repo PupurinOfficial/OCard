@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CHARACTERS, cardsOfCharacter, getCharacter, getOpponent } from '../data/cards';
+import { CHARACTERS, cardsOfCharacter } from '../data/cards';
 import { loadSave, writeSave } from '../data/save';
 import { MAX_DECK, MIN_DECK, isValidDeck } from '../game/deck';
+import { poweredPower } from '../game/glory';
 import { CardView } from '../components/CardView';
 import './deck.css';
 
@@ -11,8 +12,6 @@ export function DeckPage() {
   const [save, setSave] = useState(loadSave);
   const [selected, setSelected] = useState<string[]>(save.deck);
 
-  const character = getCharacter(save.selectedCharacter);
-  const opponent = getOpponent(character.id);
   const owned = new Set(save.owned);
   const remaining = MIN_DECK - selected.length;
 
@@ -45,7 +44,7 @@ export function DeckPage() {
       </header>
 
       <div className="page-banner">
-        从已拥有的卡牌中选择 {MIN_DECK}–{MAX_DECK} 张组成卡组，对手为 {opponent.name}（AI）。
+        从已拥有的卡牌中选择 {MIN_DECK}–{MAX_DECK} 张组成卡组，对手将在每局开始时随机抽取（AI）。
       </div>
 
       {CHARACTERS.map((owner) => {
@@ -59,6 +58,8 @@ export function DeckPage() {
               {defs.map((def) => {
                 const isOwned = owned.has(def.id);
                 const order = selected.indexOf(def.id);
+                const glory = save.glory[def.id] ?? 0;
+                const power = poweredPower(def.power, glory);
                 return (
                   <button
                     key={def.id}
@@ -72,7 +73,13 @@ export function DeckPage() {
                   >
                     {order >= 0 ? <span className="deck-card-order">{order + 1}</span> : null}
                     <CardView
-                      card={{ uid: def.id, defId: def.id, power: def.power, maxPower: def.power }}
+                      card={{
+                        uid: def.id,
+                        defId: def.id,
+                        power,
+                        maxPower: power,
+                        glory,
+                      }}
                       variant="grid"
                     />
                     <span className="deck-card-caption" title={def.name}>

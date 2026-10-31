@@ -292,3 +292,173 @@
     opacity: 0;
   }
 }
+
+/* ============ 首页看板大卡 ============ */
+.card--board {
+  width: clamp(190px, 19vw, 268px);
+  height: auto;
+  aspect-ratio: 110 / 150;
+  border-width: 3px;
+  border-radius: 18px;
+}
+
+.card--board .card__art,
+.card--board .card__scrim,
+.card--board .card__fallback {
+  border-radius: 15px;
+}
+
+.card--board .card__power {
+  top: 12px;
+  right: 15px;
+  font-size: 28px;
+}
+
+.card--board .card__realm {
+  top: 13px;
+  left: 13px;
+  padding: 3px;
+}
+
+.card--board .card__type {
+  left: 13px;
+  bottom: 11px;
+  padding: 3px;
+}
+
+.card--board .card__relive {
+  bottom: 10px;
+  font-size: 13px;
+}
+
+/* ============ 光辉 2：边框 / 属界 / 类型变成角色应援色 ============ */
+.card--glory-2,
+.card--glory-3 {
+  border-color: var(--glory-color);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--glory-color) 42%, transparent),
+    0 6px 18px color-mix(in srgb, var(--glory-color) 26%, transparent);
+}
+
+.card--glory-2 .card__realm,
+.card--glory-2 .card__type,
+.card--glory-3 .card__realm,
+.card--glory-3 .card__type {
+  color: var(--glory-color);
+  background: color-mix(in srgb, var(--glory-color) 16%, #fff);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--glory-color) 45%, transparent);
+}
+
+/* ============ 光辉 3：应援色碎片漂浮 ============ */
+.card--glory-3 {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--glory-color) 55%, transparent),
+    0 0 22px color-mix(in srgb, var(--glory-color) 34%, transparent);
+}
+
+.card__shard {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 12px 12px;
+  border-color: transparent transparent var(--glory-color) transparent;
+  opacity: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--glory-color) 70%, transparent));
+  animation: glory-shard-float 3.6s ease-in-out infinite;
+}
+
+.card__shard--1 {
+  top: -11px;
+  left: 10px;
+  rotate: 18deg;
+}
+
+.card__shard--2 {
+  top: 24%;
+  right: -11px;
+  rotate: 105deg;
+  animation-delay: 0.9s;
+}
+
+.card__shard--3 {
+  bottom: -11px;
+  right: 12px;
+  rotate: 200deg;
+  animation-delay: 1.8s;
+}
+
+.card__shard--4 {
+  bottom: 28%;
+  left: -11px;
+  rotate: 290deg;
+  animation-delay: 2.7s;
+}
+
+@keyframes glory-shard-float {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-5px);
+    opacity: 0.6;
+  }
+}
+
+/* 光辉 3 的详情弹窗：卡名应援色 + 角落碎片 */
+.card-info--glory-3 .card-info__head strong {
+  color: var(--glory-color);
+}
+
+.card-info--glory-3::before,
+.card-info--glory-3::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 10px 10px;
+  border-color: transparent transparent var(--glory-color) transparent;
+  opacity: 0.8;
+  pointer-events: none;
+  animation: glory-shard-float 3.6s ease-in-out infinite;
+}
+
+.card-info--glory-3::before {
+  top: -5px;
+  right: 12px;
+  rotate: 12deg;
+}
+
+.card-info--glory-3::after {
+  bottom: -5px;
+  left: 12px;
+  rotate: 192deg;
+  animation-delay: 1.2s;
+}
+
+/* 详情弹窗中的光辉行 */
+.card-info__glory {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.card-info__glory b {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: #b08a2e;
+}
+
+.card-info__glory em {
+  font-style: normal;
+  font-size: 10px;
+  opacity: 0.55;
+}
+
+@media (max-width: 900px) {
+  .card--board {
+    width: min(58vw, 236px);
+  }
+}

@@ -11,10 +11,7 @@ import {
 } from '../game/progress';
 import './progress-dialog.css';
 
-export type ProgressKind = 'level' | 'difficulty';
-
 interface Props {
-  kind: ProgressKind;
   save: SaveData;
   onClose: () => void;
   onToggleDifficulty: () => void;
@@ -22,7 +19,8 @@ interface Props {
 
 const LEVEL_STEPS = [1, 2, 3, 4, 5, 6, 7];
 
-export function ProgressDialog({ kind, save, onClose, onToggleDifficulty }: Props) {
+/** 等级与难度共用的一个弹窗 */
+export function ProgressDialog({ save, onClose, onToggleDifficulty }: Props) {
   const level = levelFromWins(save.wins);
   const difficulty = effectiveDifficulty(level, save.difficultyReduced);
   const multiplier = enemyEffectMultiplier(difficulty);
@@ -40,7 +38,7 @@ export function ProgressDialog({ kind, save, onClose, onToggleDifficulty }: Prop
   return (
     <div className="progress-mask" onClick={onClose}>
       <div
-        className="progress-card"
+        className="progress-card progress-card--wide"
         role="dialog"
         aria-modal="true"
         onClick={(event) => event.stopPropagation()}
@@ -49,8 +47,8 @@ export function ProgressDialog({ kind, save, onClose, onToggleDifficulty }: Prop
           ×
         </button>
 
-        {kind === 'level' ? (
-          <>
+        <div className="progress-columns">
+          <section className="progress-block">
             <p className="progress-kicker">等级</p>
             <h2 className="progress-value">{level}</h2>
             <p className="progress-line">
@@ -73,9 +71,9 @@ export function ProgressDialog({ kind, save, onClose, onToggleDifficulty }: Prop
             <p className="progress-foot">
               在累计胜利 1、2、4、8、16、32… 局时提升 1 级。对战难度默认与等级相同。
             </p>
-          </>
-        ) : (
-          <>
+          </section>
+
+          <section className="progress-block progress-block--difficulty">
             <p className="progress-kicker">对战难度</p>
             <h2 className="progress-value">{difficulty}</h2>
             <p className="progress-line">
@@ -95,7 +93,9 @@ export function ProgressDialog({ kind, save, onClose, onToggleDifficulty }: Prop
               </div>
               <div>
                 <span>胜利奖励</span>
-                <b>({REWARD_BASE} − 失去卡牌数) × {difficulty} ÷ 2</b>
+                <b>
+                  ({REWARD_BASE} − 失去卡牌数) × {difficulty} ÷ 2
+                </b>
               </div>
             </div>
             {multiplier > 1 ? (
@@ -104,12 +104,7 @@ export function ProgressDialog({ kind, save, onClose, onToggleDifficulty }: Prop
               </p>
             ) : null}
             <div className="progress-action">
-              <button
-                type="button"
-                className="btn"
-                onClick={onToggleDifficulty}
-                disabled={!canReduce}
-              >
+              <button type="button" className="btn" onClick={onToggleDifficulty} disabled={!canReduce}>
                 {save.difficultyReduced ? '恢复难度' : '降低难度'}
               </button>
               <span className="progress-hint">
@@ -118,8 +113,8 @@ export function ProgressDialog({ kind, save, onClose, onToggleDifficulty }: Prop
                   : `等级达到 ${DIFFICULTY_REDUCE_MIN_LEVEL} 后可降低 1 级`}
               </span>
             </div>
-          </>
-        )}
+          </section>
+        </div>
       </div>
     </div>
   );

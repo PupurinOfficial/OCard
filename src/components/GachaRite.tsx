@@ -1,11 +1,17 @@
 import type { CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { getCardDef } from '../data/cards';
+import { poweredPower } from '../game/glory';
 import { CardView } from './CardView';
+import { OverflowIcon } from './OverflowIcon';
 
 export interface PullResult {
   defId: string;
   dup: boolean;
+  /** 本次复现后的光辉等级 */
+  glory: number;
+  /** 该卡牌光辉已满，本次复现转化为 1 枚「满溢之辉」 */
+  overflow?: boolean;
 }
 
 interface Props {
@@ -30,6 +36,7 @@ const TICKS = Array.from({ length: 12 }, (_, index) => {
 export function GachaRite({ loopName, results, revealed, onClose }: Props) {
   const n = results.length;
   const multi = n > 1;
+  const overflowGained = results.filter((result) => result.overflow).length;
 
   return createPortal(
     <div className={`rite ${revealed ? 'is-revealed' : ''}`}>
@@ -97,6 +104,7 @@ export function GachaRite({ loopName, results, revealed, onClose }: Props) {
           <div className={`rite-gains ${multi ? 'is-multi' : ''}`}>
             {results.map((result, index) => {
               const def = getCardDef(result.defId);
+              const power = poweredPower(def.power, result.glory);
               return (
                 <div
                   key={`gain-${result.defId}-${index}`}
@@ -107,19 +115,31 @@ export function GachaRite({ loopName, results, revealed, onClose }: Props) {
                     card={{
                       uid: `gain-${index}`,
                       defId: result.defId,
-                      power: def.power,
-                      maxPower: def.power,
+                      power,
+                      maxPower: power,
+                      glory: result.glory,
                     }}
                     variant="grid"
                   />
                   <span className="rite-gain-name">{def.name}</span>
-                  <span className={`rite-gain-tag ${result.dup ? 'is-dup' : ''}`}>
-                    {result.dup ? '已拥有' : '新卡牌'}
+                  <span className={`rite-gain-tag ${result.dup ? 'is-dup' : ''} ${result.overflow ? 'is-overflow' : ''}`}>
+                    {result.overflow
+                      ? '满溢之辉 +1'
+                      : result.dup
+                        ? `光辉 ${result.glory}`
+                        : '新卡牌'}
                   </span>
                 </div>
               );
             })}
           </div>
+          {overflowGained > 0 ? (
+            <p className="rite-overflow">
+              <OverflowIcon size={14} />
+              满溢之辉 <b>+{overflowGained}</b>
+              <span>光辉已满，溢出的光辉凝成了满溢之辉</span>
+            </p>
+          ) : null}
           <button type="button" className="btn btn--primary" onClick={onClose}>
             收下
           </button>

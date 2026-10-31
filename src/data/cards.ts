@@ -17,6 +17,7 @@ export const CHARACTERS: CharacterDef[] = [
     title: '流浪的天使',
     lore: '遭「天堂」排挤，在「人界」流浪的「天使」。',
     avatar: asset('characters/musia.png'),
+    color: '#7BB8E0',
   },
   {
     id: 'yettia',
@@ -25,6 +26,7 @@ export const CHARACTERS: CharacterDef[] = [
     title: '守护的魔女',
     lore: '假装监视，实则守护的「魔女」。',
     avatar: asset('characters/yettia.png'),
+    color: '#9A6BD0',
   },
   {
     id: 'hamuna',
@@ -33,6 +35,7 @@ export const CHARACTERS: CharacterDef[] = [
     title: '麦穗之神',
     lore: '掌管丰收与日常，却被零食和偶像收买的「麦穗之神」。',
     avatar: asset('characters/hamuna.png'),
+    color: '#DFAE45',
   },
   {
     id: 'mama',
@@ -41,17 +44,15 @@ export const CHARACTERS: CharacterDef[] = [
     title: '社恐研究员',
     lore: '在「人才俱乐部」工作，因故变成矮小一只的社恐研究员。',
     avatar: asset('characters/mama.png'),
+    color: '#5FAFD8',
   },
 ];
 
-/** 对战时优先选择属界相反的角色，避免同界互斗 */
-export function getOpponent(characterId: string): CharacterDef {
-  const self = getCharacter(characterId);
-  return (
-    CHARACTERS.find((item) => item.id !== characterId && item.realm !== self.realm) ??
-    CHARACTERS.find((item) => item.id !== characterId) ??
-    CHARACTERS[0]
-  );
+/** 每局对战随机挑选一名其他角色作为对手。 */
+export function getRandomOpponent(characterId: string): CharacterDef {
+  const others = CHARACTERS.filter((item) => item.id !== characterId);
+  if (others.length === 0) return CHARACTERS[0];
+  return others[Math.floor(Math.random() * others.length)];
 }
 
 /**

@@ -1,4 +1,5 @@
 import { getCardDef } from '../data/cards';
+import { clampGlory, poweredPower } from './glory';
 import type {
   BattleAction,
   BattleState,
@@ -34,19 +35,32 @@ const shuffle = <T,>(input: T[]): T[] => {
   return arr;
 };
 
-const makeCard = (defId: string): CardInstance => {
+const makeCard = (defId: string, glory = 0): CardInstance => {
   const def = getCardDef(defId);
+  const level = clampGlory(glory);
+  const power = poweredPower(def.power, level);
   uidSeed += 1;
   return {
     uid: `${defId}#${uidSeed}`,
     defId,
-    power: def.power,
-    maxPower: def.power,
+    power,
+    maxPower: power,
+    glory: level,
   };
 };
 
 export function totalCards(player: PlayerState): number {
-  return player.hand.length + player.field.filter((card) => card !== null).length;
+  let count = player.hand.length;
+  for (const card of player.field) {
+    if (!card) continue;
+    count += 1 + (card.guards?.length ?? 0);
+  }
+  return count;
+}
+
+/** 一张上场卡牌附着的全部护盾生力之和 */
+export function guardPower(card: CardInstance): number {
+  return (card.guards ?? []).reduce((sum, guard) => sum + guard.power, 0);
 }
 
 export function computeDamage(attacker: CardInstance, target: CardInstance): number {
@@ -59,10 +73,11 @@ export function createBattle(
   playerDeck: string[],
   enemyDeck: string[],
   enemyEffectMultiplier = 1,
+  playerGlory: Record<string, number> = {},
 ): BattleState {
   const state: BattleState = {
     player: {
-      hand: shuffle(playerDeck).map((defId) => makeCard(defId)),
+      hand: shuffle(playerDeck).map((defId) => makeCard(defId, playerGlory[defId] ?? 0)),
       field: emptyField(),
       action: START_ACTION,
     },
@@ -163,12 +178,35 @@ function playCard(state: BattleState, uid: string, slot: number): BattleState {
   const side = state.turn;
   const player = state[side];
   if (player.action < COST_PLAY_CARD) return state;
-  if (slot < 0 || slot >= SLOT_COUNT || player.field[slot] !== null) return state;
+  if (slot < 0 || slot >= SLOT_COUNT) return state;
 
   const handIndex = player.hand.findIndex((card) => card.uid === uid);
   if (handIndex < 0) return state;
 
-  const [card] = player.hand.splice(handIndex, 1);
+  const card = player.hand[handIndex];
+  const def = getCardDef(card.defId);
+  const occupant = player.field[slot];
+
+  // 防守牌：放在已有卡牌上时，缩小成为它的护盾
+  if (def.type === '防守牌' && occupant) {
+    player.hand.splice(handIndex, 1);
+    occupant.guards = [
+      ...(occupant.guards ?? []),
+      {
+        uid: card.uid,
+        defId: card.defId,
+        power: card.power,
+        maxPower: card.maxPower,
+        glory: card.glory,
+      },
+    ];
+    player.action -= COST_PLAY_CARD;
+    return state;
+  }
+
+  if (occupant) return state;
+
+  player.hand.splice(handIndex, 1);
   player.field[slot] = card;
   player.action -= COST_PLAY_CARD;
   applyPlayEffect(state, side, card);
@@ -193,7 +231,20 @@ function attackCard(state: BattleState, attackerUid: string, targetUid: string):
   if (!target) return state;
 
   const damage = computeDamage(attacker, target);
-  target.power -= damage;
+  let remaining = damage;
+
+  // 优先扣除附着的防守牌生力，溢出的伤害才会落到卡牌本身
+  const guards = target.guards ?? [];
+  while (remaining > 0 && guards.length > 0) {
+    const guard = guards[guards.length - 1];
+    const absorbed = Math.min(guard.power, remaining);
+    guard.power -= absorbed;
+    remaining -= absorbed;
+    if (guard.power <= 0) guards.pop();
+  }
+  if (target.guards && target.guards.length === 0) target.guards = undefined;
+
+  if (remaining > 0) target.power -= remaining;
   player.action -= COST_ACTION;
   state.attackCounts[attackerDef.realm] += 1;
 
@@ -236,7 +287,12 @@ export function battleReducer(state: BattleState, action: BattleAction): BattleS
     case 'END_TURN':
       return endTurn(next);
     case 'RESTART':
-      return createBattle(action.playerDeck, action.enemyDeck, action.enemyEffectMultiplier);
+      return createBattle(
+        action.playerDeck,
+        action.enemyDeck,
+        action.enemyEffectMultiplier,
+        action.playerGlory,
+      );
   }
 }
 

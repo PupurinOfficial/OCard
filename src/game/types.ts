@@ -31,12 +31,25 @@ export interface ReliveState {
   turnsLeft: number;
 }
 
+/** 附在我方上场卡牌上的防守牌（护盾），被攻击时优先扣除其生力 */
+export interface GuardInstance {
+  uid: string;
+  defId: string;
+  power: number;
+  maxPower: number;
+  glory?: number;
+}
+
 export interface CardInstance {
   uid: string;
   defId: string;
   power: number;
   maxPower: number;
+  /** 卡牌的光辉等级（0–3），仅用于展示与生力计算 */
+  glory?: number;
   relive?: ReliveState;
+  /** 附在这张卡牌上的防守牌 */
+  guards?: GuardInstance[];
 }
 
 export interface PlayerState {
@@ -68,7 +81,13 @@ export type BattleAction =
   | { type: 'ATTACK'; attackerUid: string; targetUid: string }
   | { type: 'BREAK_DOMAIN'; attackerUid: string }
   | { type: 'END_TURN' }
-  | { type: 'RESTART'; playerDeck: string[]; enemyDeck: string[]; enemyEffectMultiplier: number };
+  | {
+      type: 'RESTART';
+      playerDeck: string[];
+      enemyDeck: string[];
+      enemyEffectMultiplier: number;
+      playerGlory?: Record<string, number>;
+    };
 
 export interface CharacterDef {
   id: string;
@@ -77,4 +96,6 @@ export interface CharacterDef {
   title: string;
   lore: string;
   avatar: string;
+  /** 角色应援色：光辉 2 起的卡牌边框与标识、光辉 3 的卡名与碎片使用 */
+  color: string;
 }

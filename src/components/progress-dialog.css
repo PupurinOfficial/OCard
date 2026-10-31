@@ -30,6 +30,26 @@
   animation: progress-card-in 0.26s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* 等级 + 难度共用弹窗：双栏 */
+.progress-card--wide {
+  width: min(760px, 94vw);
+}
+
+.progress-columns {
+  display: grid;
+  grid-template-columns: 1.12fr 1fr;
+  gap: 28px;
+}
+
+.progress-block {
+  min-width: 0;
+}
+
+.progress-block--difficulty {
+  padding-left: 26px;
+  border-left: 1px solid rgba(138, 139, 144, 0.18);
+}
+
 @keyframes progress-card-in {
   from {
     opacity: 0;
@@ -185,4 +205,18 @@
   font-size: 11px;
   line-height: 1.8;
   opacity: 0.5;
+}
+
+@media (max-width: 680px) {
+  .progress-columns {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .progress-block--difficulty {
+    padding-left: 0;
+    padding-top: 20px;
+    border-left: 0;
+    border-top: 1px solid rgba(138, 139, 144, 0.18);
+  }
 }

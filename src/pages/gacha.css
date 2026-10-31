@@ -34,6 +34,44 @@
   color: #34363c;
 }
 
+.gacha-wallet-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gacha-wallet-sep {
+  width: 1px;
+  height: 12px;
+  background: rgba(138, 139, 144, 0.28);
+}
+
+.gacha-shop-link {
+  position: absolute;
+  right: clamp(24px, 4vw, 54px);
+  top: clamp(68px, 10vh, 84px);
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(232, 184, 75, 0.42);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(8px);
+  color: #96721d;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+}
+
+.gacha-shop-link:hover {
+  border-color: rgba(232, 184, 75, 0.75);
+  background: #fff;
+  transform: translateY(-1px);
+}
+
 /* ============ 回环列表（左上角） ============ */
 .loop-rail {
   position: absolute;
@@ -261,6 +299,116 @@
 
 .pull-btn--primary span {
   opacity: 0.7;
+}
+
+/* ============ 用满溢之辉补足记忆之环 ============ */
+.gacha-confirm-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(6px);
+  animation: confirm-mask-in 0.2s ease both;
+}
+
+@keyframes confirm-mask-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.gacha-confirm {
+  width: min(430px, 92vw);
+  padding: 26px 28px 24px;
+  border-radius: 24px;
+  border: 1px solid rgba(138, 139, 144, 0.2);
+  background: #fff;
+  box-shadow: 0 28px 72px rgba(60, 62, 70, 0.22);
+  text-align: center;
+  animation: confirm-card-in 0.26s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes confirm-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.gacha-confirm-kicker {
+  margin: 0 0 8px;
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+  opacity: 0.45;
+}
+
+.gacha-confirm-title {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.65;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  color: #34363c;
+}
+
+.gacha-confirm-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(204, 207, 225, 0.22);
+}
+
+.gacha-confirm-rows > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  font-size: 12px;
+}
+
+.gacha-confirm-rows span {
+  letter-spacing: 0.06em;
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+.gacha-confirm-rows b {
+  font-weight: 600;
+  color: #4a4c52;
+}
+
+.gacha-confirm-rows .is-highlight span,
+.gacha-confirm-rows .is-highlight b {
+  color: #96721d;
+  opacity: 1;
+}
+
+.gacha-confirm-note {
+  margin: 12px 0 0;
+  font-size: 10.5px;
+  line-height: 1.7;
+  opacity: 0.5;
+}
+
+.gacha-confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 /* ============ 复现仪式 ============ */
@@ -592,6 +740,40 @@
 .rite-gain-tag.is-dup {
   background: rgba(138, 139, 144, 0.14);
   color: var(--dark);
+}
+
+.rite-gain-tag.is-overflow {
+  border: 1px solid rgba(232, 184, 75, 0.55);
+  background: rgba(232, 184, 75, 0.18);
+  color: #96721d;
+  font-weight: 600;
+}
+
+.rite-overflow {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(232, 184, 75, 0.45);
+  background: rgba(232, 184, 75, 0.1);
+  color: #96721d;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.rite-overflow b {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.rite-overflow span {
+  font-size: 9.5px;
+  letter-spacing: 0.02em;
+  opacity: 0.6;
 }
 
 @media (max-width: 900px) {

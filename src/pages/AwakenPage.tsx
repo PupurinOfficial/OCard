@@ -1,11 +1,25 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CHARACTERS, REALM_COLORS, cardsOfCharacter, getCharacter } from '../data/cards';
 import { loadSave, writeSave } from '../data/save';
 import { MAX_DECK } from '../game/deck';
 import { RealmIcon } from '../components/RealmIcon';
+import { FlowingBorder, makeFlowLines } from '../components/FlowingBorder';
 import './awaken.css';
+
+/** 点击角色时的“缩小 → 回弹放大”节奏 */
+const PICK_KEYFRAMES: Keyframe[] = [
+  { transform: 'translateY(-7px) scale(1)', easing: 'cubic-bezier(0.45, 0, 0.55, 1)' },
+  {
+    transform: 'translateY(-7px) scale(0.78)',
+    offset: 0.32,
+    easing: 'cubic-bezier(0.2, 1, 0.3, 1)',
+  },
+  { transform: 'translateY(-7px) scale(1)' },
+];
+/** 缩放动画时长（约为原先 620ms 的一半） */
+const PICK_DURATION = 310;
 
 export function AwakenPage() {
   const navigate = useNavigate();
@@ -13,6 +27,16 @@ export function AwakenPage() {
   const [picked, setPicked] = useState<string | null>(null);
 
   const chosen = picked ? getCharacter(picked) : null;
+  // 每次选定都重新抽一组随机水线，让描边不再是完整的金色边框
+  const choiceLines = useMemo(() => makeFlowLines(6), [picked]);
+  const confirmLines = useMemo(() => makeFlowLines(4), []);
+
+  const pick = (id: string, element: HTMLButtonElement) => {
+    setPicked(id);
+    if (typeof element.animate !== 'function') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    element.animate(PICK_KEYFRAMES, { duration: PICK_DURATION, fill: 'none' });
+  };
 
   const confirm = () => {
     if (!picked) return;
@@ -44,9 +68,12 @@ export function AwakenPage() {
             type="button"
             className={`awaken-choice ${picked === character.id ? 'is-picked' : ''}`}
             style={{ '--realm-color': REALM_COLORS[character.realm] } as CSSProperties}
-            onClick={() => setPicked(character.id)}
+            onClick={(event) => pick(character.id, event.currentTarget)}
             aria-pressed={picked === character.id}
           >
+            {picked === character.id ? (
+              <FlowingBorder lines={choiceLines} inset={0} radius={26} />
+            ) : null}
             <span className="awaken-frame">
               <img src={character.avatar} alt={character.name} draggable={false} />
             </span>
@@ -67,10 +94,13 @@ export function AwakenPage() {
       <footer className="awaken-foot">
         <button
           type="button"
-          className="btn btn--primary"
+          className="btn btn--primary awaken-confirm"
           onClick={confirm}
           disabled={!chosen}
         >
+          {chosen ? (
+            <FlowingBorder lines={confirmLines} inset={5} radius={999} color="rgba(255, 255, 255, 0.96)" />
+          ) : null}
           确认命定
         </button>
         <p className="awaken-hint">
